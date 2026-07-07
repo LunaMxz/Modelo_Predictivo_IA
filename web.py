@@ -2,10 +2,10 @@ import streamlit as st
 
 from utils.leer_csv import cargar_datos
 from auth.login import mostrar_login
-from pages.inicio import mostrar_inicio
-from pages.analisis import mostrar_analisis
-from pages.alertas import mostrar_alertas
-from pages.configuracion import mostrar_configuracion
+from vistas.inicio import mostrar_inicio
+from vistas.analisis import mostrar_analisis
+from vistas.alertas import mostrar_alertas
+from vistas.configuracion import mostrar_configuracion
 from auth.registro import mostrar_registro
 
 
@@ -53,13 +53,36 @@ footer{
     visibility:hidden;
 }
 
-/* Oculta el header superior */
-header{
-    visibility:hidden;
-}
-
 </style>
 """, unsafe_allow_html=True)
+
+#cargar datos
+
+
+df = cargar_datos()
+
+# =====================================
+# LOGIN
+# =====================================
+
+if not st.session_state.logueado:
+
+    st.markdown("""
+        <style>
+        section[data-testid="stSidebar"]{
+        display:none;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+ 
+    if st.session_state.pagina == "login":
+
+        mostrar_login()
+
+    elif st.session_state.pagina == "registro":
+        mostrar_registro()
+
+    st.stop()
 
 # =====================================
 # MENÚ LATERAL
@@ -80,32 +103,9 @@ opcion = st.sidebar.radio(
 
 )
 
-#cargar datos
 
 
-df = cargar_datos()
 
-# =====================================
-# LOGIN
-# =====================================
-
-if "logueado" not in st.session_state:
-    st.session_state.logueado = False
-
-if "pagina" not in st.session_state:
-    st.session_state.pagina = "login"
-
-if not st.session_state.logueado:
-
-    if st.session_state.pagina == "login":
-
-        mostrar_login()
-
-    elif st.session_state.pagina == "registro":
-
-        mostrar_registro()
-
-    st.stop()
 
 
 # =====================================
