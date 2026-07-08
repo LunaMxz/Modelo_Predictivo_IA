@@ -8,11 +8,13 @@ def mostrar_login():
 
     st.markdown("---")
 
-    _, centro, _ = st.columns([1,2,1])
+    _, centro, _ = st.columns([1, 2, 1])
 
     with centro:
 
-        correo = st.text_input("📧 Correo electrónico")
+        correo = st.text_input(
+            "📧 Correo electrónico"
+        )
 
         password = st.text_input(
             "🔒 Contraseña",
@@ -24,9 +26,24 @@ def mostrar_login():
             use_container_width=True
         ):
 
+            # =====================================
+            # TEMPORAL
+            # Posteriormente esta validación
+            # se realizará consultando MySQL.
+            # =====================================
+
             if correo == "admin@gmail.com" and password == "1234":
 
                 st.session_state.logueado = True
+
+                st.session_state.usuario = {
+                    "nombre": "Usuario",
+                    "correo": correo,
+                    "rol": "Usuario"
+                }
+
+                st.session_state.pagina = "inicio"
+
                 st.rerun()
 
             else:
@@ -43,4 +60,5 @@ def mostrar_login():
         ):
 
             st.session_state.pagina = "registro"
+
             st.rerun()

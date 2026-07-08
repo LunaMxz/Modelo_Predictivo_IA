@@ -1,40 +1,51 @@
 import streamlit as st
 import pandas as pd
 
-# Cargar datos
-df = pd.read_csv("data/procesado/datos_limpios.csv")
+from dashboard.encabezado import mostrar_encabezado
+from dashboard.estado import mostrar_estado
+from dashboard.kpis import mostrar_kpis
+from dashboard.graficas import mostrar_graficas
+from dashboard.inteligencia import mostrar_inteligencia
+from dashboard.alertas import mostrar_alertas
+from dashboard.estadisticas import mostrar_estadisticas
+from dashboard.filtros import mostrar_filtros
 
-st.title(" Dashboard de Salud del Cultivo")
+# =====================================
+# CONFIGURACIÓN
+# =====================================
+
+st.set_page_config(
+    page_title="Dashboard Inteligente",
+    page_icon="🌱",
+    layout="wide"
+)
+
+# =====================================
+# CARGAR DATOS
+# =====================================
+
+df = pd.read_csv(
+    "data/procesado/datos_limpios.csv"
+    
+)
+
+df = mostrar_filtros(df)
+
+# =====================================
+# DASHBOARD
+# =====================================
+
+mostrar_encabezado(df)
 
 
-# KPIs
-st.subheader(" Indicadores generales")
+mostrar_estado(df)
 
-col1, col2, col3 = st.columns(3)
+mostrar_kpis(df)
 
-col1.metric(" Temp promedio", round(df["temp_ambiente"].mean(), 2))
-col2.metric(" Humedad ambiente", round(df["hum_ambiente"].mean(), 2))
-col3.metric(" Lluvia max", round(df["lluvia_pct"].max(), 2))
+mostrar_graficas(df)
 
+mostrar_inteligencia(df)
 
-# Gráficas
+mostrar_alertas(df)
 
-st.subheader(" Evolución de sensores")
-
-st.line_chart(df.set_index("timestamp")[["temp_ambiente"]])
-st.line_chart(df.set_index("timestamp")[["hum_ambiente"]])
-st.line_chart(df.set_index("timestamp")[["hum_suelo"]])
-st.line_chart(df.set_index("timestamp")[["lluvia_pct"]])
-
-
-# Alertas simples
-
-st.subheader(" Detección de estrés")
-
-if df["temp_ambiente"].max() > 35:
-    st.error("Estrés térmico detectado")
-else:
-    st.success("Sin estrés térmico")
-
-if df["hum_suelo"].mean() < 30:
-    st.warning("Posible estrés hídrico")
+mostrar_estadisticas(df)
