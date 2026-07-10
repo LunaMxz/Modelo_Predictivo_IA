@@ -1,7 +1,7 @@
 # config.py
 
 CONFIG = {
-    "frecuencia_esperada": "10s",
+    "frecuencia_esperada": "15s",
     "rangos_validos": {
         "temp_ambiente": (-10, 60),
         "hum_ambiente": (0, 100),
