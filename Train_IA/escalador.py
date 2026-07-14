@@ -1,8 +1,8 @@
 # escalador.py
-
 import os
 import joblib
 from sklearn.preprocessing import MinMaxScaler
+
 
 def ajustar_y_transformar(train, val, test, config_entrenamiento,
                            ruta_guardado="artifacts/scaler.pkl"):
@@ -29,3 +29,20 @@ def ajustar_y_transformar(train, val, test, config_entrenamiento,
           f"inverse_transform de las predicciones en producción)")
 
     return train_esc, val_esc, test_esc, scaler
+
+
+def transformar_con_scaler_existente(df, scaler, config_entrenamiento):
+    """
+    Para evaluacion/inferencia: aplica un scaler YA AJUSTADO (cargado de
+    artifacts/scaler.pkl) a un DataFrame nuevo. NUNCA hace fit() -- eso
+    ya se hizo una sola vez durante el entrenamiento, sobre train.
+    """
+    columnas_esperadas = (
+        config_entrenamiento["columnas_agregacion_media"]
+        + config_entrenamiento["columnas_agregacion_max"]
+    )
+    columnas = [c for c in df.columns if c in columnas_esperadas]
+
+    df_esc = df.copy()
+    df_esc[columnas] = scaler.transform(df[columnas])
+    return df_esc
