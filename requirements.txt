@@ -1,0 +1,17 @@
+streamlit
+pandas
+numpy
+plotly
+pymysql
+bcrypt
+
+# Modelo de IA (Train_IA)
+tensorflow
+scikit-learn
+joblib
+
+# Entrenamiento del modelo (conexión y análisis exploratorio)
+sqlalchemy
+mysql-connector-python
+matplotlib
+seaborn

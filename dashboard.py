@@ -1,14 +1,14 @@
 import streamlit as st
 import pandas as pd
 
-from dashboard.encabezado import mostrar_encabezado
-from dashboard.estado import mostrar_estado
-from dashboard.kpis import mostrar_kpis
-from dashboard.graficas import mostrar_graficas
-from dashboard.inteligencia import mostrar_inteligencia
-from dashboard.alertas import mostrar_alertas
-from dashboard.estadisticas import mostrar_estadisticas
-from dashboard.filtros import mostrar_filtros
+from dashboard_componentes.encabezado import mostrar_encabezado
+from dashboard_componentes.estado import mostrar_estado
+from dashboard_componentes.kpis import mostrar_kpis
+from dashboard_componentes.graficas import mostrar_graficas
+from dashboard_componentes.inteligencia import mostrar_inteligencia
+from dashboard_componentes.alertas import mostrar_alertas
+from dashboard_componentes.estadisticas import mostrar_estadisticas
+from dashboard_componentes.filtros import mostrar_filtros
 
 # =====================================
 # CONFIGURACIÓN

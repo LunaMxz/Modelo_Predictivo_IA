@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 
-from dashboard.selector import seleccionar_sensor
+from dashboard_componentes.selector import seleccionar_sensor
 
 
 def mostrar_graficas(df):

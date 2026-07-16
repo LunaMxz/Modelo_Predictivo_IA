@@ -3,7 +3,7 @@ import streamlit as st
 # from streamlit_option_menu import option_menu
 
 from styles.estilos import cargar_estilos
-from utils.leer_csv import cargar_datos
+from utils.datos import cargar_datos
 
 from auth.login import mostrar_login
 from auth.registro import mostrar_registro
@@ -95,13 +95,11 @@ div[role="radiogroup"] label:hover{
 
 if not st.session_state.logueado:
 
-    st.markdown("""
-    <style>
-    section[data-testid="stSidebar"]{
-        display:none;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    st.markdown("""<style>
+section[data-testid="stSidebar"]{
+    display:none;
+}
+</style>""", unsafe_allow_html=True)
 
     if st.session_state.pagina == "login":
 
@@ -133,7 +131,7 @@ df = cargar_datos()
 
 if df is None or df.empty:
 
-    st.warning("No existen datos para mostrar.")
+    st.warning("No existe datos para mostrar.")
 
     st.stop()
 
@@ -186,7 +184,11 @@ with st.sidebar:
 
 if st.session_state.vista == "Inicio":
 
+    
+
     mostrar_inicio(df)
+
+    
 
 elif st.session_state.vista == "Análisis":
 

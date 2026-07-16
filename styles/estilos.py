@@ -3,101 +3,101 @@ import streamlit as st
 def cargar_estilos():
 
     st.markdown("""
-    <style>
+<style>
 
-    /* Tarjetas */
+/* Tarjetas */
 
-    .card{
+.card{
 
-        background:#F5FFF6;
+    background:#F5FFF6;
 
-        border-radius:18px;
+    border-radius:18px;
 
-        padding:20px;
+    padding:20px;
 
-        box-shadow:0px 4px 15px rgba(0,0,0,.08);
+    box-shadow:0px 4px 15px rgba(0,0,0,.08);
 
-        border:1px solid #DCEFD9;
+    border:1px solid #DCEFD9;
 
-    }
+}
 
-    .titulo-card{
+.titulo-card{
 
-        color:#2E7D32;
+    color:#2E7D32;
 
-        font-size:18px;
+    font-size:18px;
 
-        font-weight:bold;
+    font-weight:bold;
 
-    }
+}
 
-    .valor-card{
+.valor-card{
 
-        font-size:35px;
+    font-size:35px;
 
-        font-weight:bold;
+    font-weight:bold;
 
-        margin-top:10px;
+    margin-top:10px;
 
-    }
-                
-    /* Reduce el espacio superior */
+}
 
-    .block-container{
+/* Reduce el espacio superior */
 
-        padding-top: 0.8rem;
+.block-container{
 
-    }            
+    padding-top: 0.8rem;
 
-    .sub-card{
+}
 
-        color:gray;
+.sub-card{
 
-        font-size:15px;
+    color:gray;
 
-    }
-                
-    /* ===========================
-    BOTONES MENÚ
-    =========================== */
+    font-size:15px;
 
-    div.stButton > button{
+}
 
-        width:100%;
+/* ===========================
+BOTONES MENÚ
+=========================== */
 
-        background:#292C33;
+div.stButton > button{
 
-        color:#ECECEC;
+    width:100%;
 
-        border:1px solid #353840;
+    background:#292C33;
 
-        border-radius:12px;
+    color:#ECECEC;
 
-        padding:12px 15px;
+    border:1px solid #353840;
 
-        text-align:left;
+    border-radius:12px;
 
-        font-size:15px;
+    padding:12px 15px;
 
-        font-weight:500;
+    text-align:left;
 
-        transition:all .25s ease;
+    font-size:15px;
 
-        margin-bottom:8px;
+    font-weight:500;
 
-    }
+    transition:all .25s ease;
 
-    div.stButton > button:hover{
+    margin-bottom:8px;
 
-        background:#32363E;
+}
 
-        border-color:#57C84D;
+div.stButton > button:hover{
 
-        box-shadow:0 0 12px rgba(87,200,77,.12);
+    background:#32363E;
 
-        transform:translateX(3px);
+    border-color:#57C84D;
 
-    }
+    box-shadow:0 0 12px rgba(87,200,77,.12);
 
-    </style>
+    transform:translateX(3px);
+
+}
+
+</style>
     """, unsafe_allow_html=True)

@@ -1,7 +1,11 @@
 import streamlit as st
 from datetime import datetime
 
-def mostrar_header():
+from utils.reglas_cultivo import evaluar_estado
+from utils.estado_conexion import evaluar_conexion
+
+
+def mostrar_header(df=None):
 
     usuario = st.session_state.get("usuario")
 
@@ -10,9 +14,12 @@ def mostrar_header():
 
     nombre = usuario["nombre"]
     correo = usuario["correo"]
-    rol = usuario["rol"]
+    rol = usuario.get("rol", "Usuario")
 
-        # Saludo según la hora
+    # =====================================
+    # SALUDO
+    # =====================================
+
     hora = datetime.now().hour
 
     if hora < 12:
@@ -24,47 +31,61 @@ def mostrar_header():
 
     fecha = datetime.now().strftime("%d/%m/%Y")
 
-    col1, col2, col3 = st.columns([8, 1, 1])
+    # =====================================
+    # ESTADO DE CONEXIÓN (calculado una sola vez, se usa abajo)
+    # =====================================
 
-    # =============================
-    # SALUDO
-    # =============================
+    conexion = None
+
+    if df is not None and "timestamp" in df and len(df) > 0:
+        conexion = evaluar_conexion(df["timestamp"].iloc[-1])
+
+    # =====================================
+    # HEADER
+    # =====================================
+
+    col1, col_sync, col2, col3 = st.columns([6, 2, 1, 1])
 
     with col1:
 
-        st.markdown(f"""
-        <div style="margin-top:-4px;">            
-        
-        <div style="
-            font-size:18px;
-            color:#D9D9D9;
-            font-weight:600;
-        ">
-                    
-        {saludo},
-        <span style="color:#57C84D;">{nombre}</span>
+        logo, texto = st.columns([1, 7])
 
-        </div>
+        with logo:
 
-        <div style="
-        color:#9E9E9E;
-        font-size:14px;
-        margin-top:4px;
-        ">
+            st.image(
+                "imagenes/logo.jpeg",
+                width=65
+            )
 
-        
-        <div style="
-            color:#8C8C8C;
-            font-size:14px;
-            margin-top:2px;
-        ">
-        {fecha}
-        </div>
-        """, unsafe_allow_html=True)
+        with texto:
 
-    # =============================
+            html = f"""<div style="padding-top:5px;">
+<h2 style="color:#57C84D; margin-bottom:0px;">Agroindustria</h2>
+<p style="color:#B5B5B5; margin-top:0px; font-size:15px;">{saludo}, <b>{nombre}</b></p>
+<p style="color:#8D8D8D; font-size:13px; margin-top:-10px;">📅 {fecha}</p>
+</div>"""
+
+            st.markdown(html, unsafe_allow_html=True)
+
+    # =====================================
+    # BADGE DE SINCRONIZACIÓN (siempre visible, no escondido en un popover)
+    # =====================================
+
+    with col_sync:
+
+        if conexion is not None:
+
+            st.markdown(f"""<div style="padding-top:28px; text-align:center;">
+<span style="background:{conexion['color']}22; color:{conexion['color']}; padding:6px 14px;
+border-radius:20px; font-size:14px; font-weight:600; border:1px solid {conexion['color']}55;
+white-space:nowrap;">
+{conexion['icono']} {conexion['mensaje']}
+</span>
+</div>""", unsafe_allow_html=True)
+
+    # =====================================
     # NOTIFICACIONES
-    # =============================
+    # =====================================
 
     with col2:
 
@@ -74,87 +95,69 @@ def mostrar_header():
 
             st.divider()
 
-            st.success("Sistema funcionando correctamente.")
+            if df is not None and len(df) > 0:
 
-            st.info("No existen alertas críticas.")
+                estado_cultivo = evaluar_estado(
+                    float(df["temp_ambiente"].iloc[-1]),
+                    float(df["hum_suelo"].iloc[-1]),
+                    float(df["hum_ambiente"].iloc[-1]) if "hum_ambiente" in df else None,
+                    float(df["lluvia_pct"].iloc[-1]) if "lluvia_pct" in df else None,
+                )
 
-            st.caption("Última actualización hace unos segundos.")
+                if estado_cultivo["nivel"] == "critico":
+                    st.error(f"{estado_cultivo['icono']} {estado_cultivo['titulo']}")
+                elif estado_cultivo["nivel"] == "atencion":
+                    st.warning(f"{estado_cultivo['icono']} {estado_cultivo['titulo']}")
+                else:
+                    st.success(f"{estado_cultivo['icono']} {estado_cultivo['titulo']}")
 
-    # =============================
-    # USUARIO
-    # =============================
-    
+                if conexion is not None:
+                    st.info(f"{conexion['icono']} {conexion['mensaje']}")
+                    st.caption(f"Última lectura registrada: {df['timestamp'].iloc[-1]}")
+
+            else:
+
+                st.info("Aún no hay datos de los sensores.")
+
+    # =====================================
+    # PERFIL
+    # =====================================
+
     with col3:
 
         with st.popover("👤"):
 
-            st.markdown(f"""
-            <div style="
-            background:#2A2D34;
-            border:1px solid #3A3D45;
-            border-radius:14px;
-            padding:15px;
-            text-align:center;
-            ">
+            html_perfil = f"""<div style="text-align:center;">
+<div style="font-size:55px;">👨🏻‍🌾</div>
+<h3 style="margin-bottom:0px;">{nombre}</h3>
+<p style="color:#AFAFAF;">{correo}</p>
+<p>👤 {rol}</p>
+<p style="color:#57C84D;">🟢 En línea</p>
+</div>"""
 
-            <div style="font-size:34px;">
-            👨🏻‍💻
-            </div>
-
-            <div style="
-            font-size:17px;
-            font-weight:600;
-            color:white;
-            margin-top:-4px;
-            ">
-            {nombre}
-            </div>
-
-            <div style="
-            font-size:12px;
-            color:#A8A8A8;
-            ">
-            {correo}
-            </div>
-
-            <div style="
-            margin-top:10px;
-            color:#57C84D;
-            font-size:13px;
-            font-weight:600;
-            ">
-            🟢 En línea
-            </div>
-
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(html_perfil, unsafe_allow_html=True)
 
             st.divider()
 
-            if st.button(
-                "⚙ Configuración",
-                use_container_width=True
-            ):
+            if rol == "Dueño":
 
-                st.session_state.vista="Configuración"
+                if st.button(
+                    "⚙ Configuración",
+                    use_container_width=True
+                ):
 
-                st.rerun()
+                    st.session_state.vista = "Configuración"
+                    st.rerun()
 
             if st.button(
                 "🚪 Cerrar sesión",
-                use_container_width=True,
                 type="primary",
-                key="logout"
+                use_container_width=True
             ):
 
                 st.session_state.logueado = False
+                st.session_state.usuario = None
                 st.session_state.pagina = "login"
-
-                if "usuario" in st.session_state:
-                    del st.session_state["usuario"]
-
                 st.rerun()
-
-    
 
     st.divider()
