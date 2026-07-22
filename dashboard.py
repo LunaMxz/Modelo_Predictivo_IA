@@ -1,3 +1,9 @@
+# ⚠ ARCHIVO EN DESUSO ⚠
+# Esta pantalla ya vive dentro de web.py como "vistas/dashboard_analitico.py",
+# conectada a la base de datos real (no a este CSV de prueba).
+# Ya no corras "streamlit run dashboard.py" -- usa "streamlit run web.py".
+# Se deja este archivo por ahora solo como referencia histórica.
+
 import streamlit as st
 import pandas as pd
 

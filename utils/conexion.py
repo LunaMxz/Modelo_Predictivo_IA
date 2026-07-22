@@ -5,13 +5,13 @@ def obtener_conexion():
 
     conexion = pymysql.connect(
 
-        host="26.19.176.111",
+        host="localhost",
 
-        user="root2",
+        user="root",
 
-        password="87654321",
+        password="",
 
-        database="agroindustrial",
+        database="mediciones_3meses",
 
         cursorclass=pymysql.cursors.DictCursor
 

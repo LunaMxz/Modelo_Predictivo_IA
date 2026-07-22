@@ -1,10 +1,9 @@
 import streamlit as st
-from datetime import datetime
+
+from utils.estado_conexion import evaluar_conexion
 
 
-def mostrar_footer():
-
-    fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
+def mostrar_footer(df=None):
 
     st.divider()
 
@@ -20,14 +19,28 @@ Monitoreo inteligente para cultivos en invernadero mediante sensores IoT e Intel
 
     with col2:
 
-        st.markdown(f"""
+        if df is not None and "timestamp" in df and len(df) > 0:
+
+            conexion = evaluar_conexion(df["timestamp"].iloc[-1])
+
+            ultima = df["timestamp"].iloc[-1]
+
+            st.markdown(f"""
 ### 📡 Estado del sistema
 
-🟢 Conectado
+{conexion['icono']} {conexion['mensaje']}
 
 🕒 Última actualización
 
-**{fecha}**
+**{ultima}**
+""")
+
+        else:
+
+            st.markdown("""
+### 📡 Estado del sistema
+
+🔴 Sin datos disponibles
 """)
 
     with col3:

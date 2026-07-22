@@ -1,15 +1,21 @@
 import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()  # carga las variables de .env (credenciales de correo, etc.)
 
 # from streamlit_option_menu import option_menu
 
 from styles.estilos import cargar_estilos
 from utils.datos import cargar_datos
+from utils.reglas_cultivo import evaluar_estado
+from utils.notificaciones import revisar_y_notificar
 
 from auth.login import mostrar_login
 from auth.registro import mostrar_registro
 
 from vistas.inicio import mostrar_inicio
 from vistas.analisis import mostrar_analisis
+from vistas.dashboard_analitico import mostrar_dashboard_analitico
 # from vistas.alertas import mostrar_alertas
 from vistas.configuracion import mostrar_configuracion
 
@@ -136,6 +142,32 @@ if df is None or df.empty:
     st.stop()
 
 # =====================================
+# NOTIFICACIONES POR CORREO
+# =====================================
+# Revisa si el estado actual del cultivo empeoró respecto al último aviso
+# enviado, y manda un correo si corresponde (no se repite si sigue igual).
+# Se ejecuta en cada carga de la app -- recuerda que esto NO vigila 24/7
+# de forma independiente, solo cuando alguien tiene la app abierta.
+
+estado_actual = evaluar_estado(
+    float(df["temp_ambiente"].iloc[-1]),
+    float(df["hum_suelo"].iloc[-1]),
+    float(df["hum_ambiente"].iloc[-1]) if "hum_ambiente" in df else None,
+    float(df["lluvia_pct"].iloc[-1]) if "lluvia_pct" in df else None,
+)
+
+resultado_notificacion = revisar_y_notificar(estado_actual)
+
+if resultado_notificacion is not None:
+
+    exito, detalle = resultado_notificacion
+
+    if exito:
+        st.toast(f"📧 Alerta enviada por correo: {estado_actual['titulo']}")
+    else:
+        st.toast(f"⚠ No se pudo enviar la alerta por correo: {detalle}")
+
+# =====================================
 # MENÚ LATERAL
 # =====================================
 
@@ -176,6 +208,17 @@ with st.sidebar:
 
         st.rerun()
 
+    if usuario.get("rol") in ("Dueño", "Agrónomo"):
+
+        if st.button(
+            "📈   Dashboard",
+            use_container_width=True
+        ):
+
+            st.session_state.vista = "Dashboard"
+
+            st.rerun()
+
 
 
 # =====================================
@@ -193,6 +236,10 @@ if st.session_state.vista == "Inicio":
 elif st.session_state.vista == "Análisis":
 
     mostrar_analisis(df)
+
+elif st.session_state.vista == "Dashboard":
+
+    mostrar_dashboard_analitico(df)
 
 elif st.session_state.vista == "Configuración":
 

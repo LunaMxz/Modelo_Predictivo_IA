@@ -24,4 +24,4 @@ def mostrar_inicio(df):
 
     mostrar_actividad(df)
 
-    mostrar_footer()
+    mostrar_footer(df)

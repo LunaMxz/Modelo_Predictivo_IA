@@ -1,7 +1,7 @@
 import streamlit as st
 
 from auth.sesion import obtener_usuarios, actualizar_rol, ROLES_DISPONIBLES
-from utils.notificaciones import cargar_preferencias, guardar_preferencias
+from utils.notificaciones import cargar_preferencias, guardar_preferencias, enviar_correo
 
 
 def mostrar_configuracion():
@@ -58,6 +58,20 @@ def mostrar_configuracion():
         guardar_preferencias(preferencias)
 
         st.success("Preferencias guardadas.")
+
+    if st.button("📧 Enviar correo de prueba", disabled=not correo_destino):
+
+        exito, detalle = enviar_correo(
+            correo_destino,
+            "🌱 Correo de prueba -- Agroindustria",
+            "Si estás leyendo esto, las notificaciones por correo están "
+            "configuradas correctamente.\n\n— Sistema de monitoreo Agroindustria",
+        )
+
+        if exito:
+            st.success("Correo de prueba enviado. Revisa tu bandeja de entrada (y spam).")
+        else:
+            st.error(f"No se pudo enviar: {detalle}")
 
     st.divider()
 

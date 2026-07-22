@@ -5,7 +5,7 @@ carga segura de datos cudos, Tolera:
 
   - JSON con sintaxis rota en registros individuales (los descarta, no tumba el proceso completo)
   - NDJSON (un objeto JSON por línea), común en streams de sensores
-  - Estructura anidada variable: {"sensores": {...}} 
+  - Estructura anidada variable: {"sensores": {...}}        
 """
 
 import json

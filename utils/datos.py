@@ -1,8 +1,10 @@
 import pandas as pd
+import streamlit as st
 
 from utils.conexion import obtener_conexion
 
 
+@st.cache_data(ttl=60, show_spinner="Cargando datos del invernadero...")
 def cargar_datos():
 
     conexion = obtener_conexion()
